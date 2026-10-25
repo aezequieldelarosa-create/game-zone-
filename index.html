@@ -1,0 +1,295 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GAME ZONE</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #10101a;
+    color: white;
+}
+
+header {
+    background: #1b1b2f;
+    padding: 20px;
+    text-align: center;
+}
+
+header h1 {
+    color: #a855f7;
+    font-size: 35px;
+}
+
+nav {
+    background: #292944;
+    padding: 15px;
+    text-align: center;
+}
+
+nav a {
+    color: white;
+    margin: 12px;
+    text-decoration: none;
+}
+
+nav a:hover {
+    color: #c084fc;
+}
+
+.portada {
+    text-align: center;
+    padding: 35px 15px;
+    background: linear-gradient(120deg, #30105e, #10101a);
+}
+
+.portada h2 {
+    font-size: 30px;
+}
+
+input, select {
+    padding: 12px;
+    margin: 8px;
+    border-radius: 6px;
+    border: none;
+}
+
+.productos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 25px;
+}
+
+.producto {
+    background: #202033;
+    width: 220px;
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.producto img {
+    width: 100%;
+    height: 150px;
+    object-fit: contain;
+    background: #ffffff;
+    border-radius: 8px;
+}
+
+.precio {
+    color: #c084fc;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+button {
+    background: #9333ea;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin: 4px;
+}
+
+button:hover {
+    background: #7e22ce;
+}
+
+#carrito {
+    background: #1b1b2f;
+    padding: 25px;
+    margin: 20px;
+    border-radius: 10px;
+}
+
+footer {
+    text-align: center;
+    background: #1b1b2f;
+    padding: 20px;
+    margin-top: 30px;
+}
+
+@media (max-width: 500px) {
+    .producto {
+        width: 90%;
+    }
+
+    nav a {
+        display: inline-block;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🎮 GAME ZONE</h1>
+    <p>Tu mundo gamer empieza acá</p>
+</header>
+
+<nav>
+    <a href="#inicio">Inicio</a>
+    <a href="#tienda">Tienda</a>
+    <a href="#carrito">Carrito</a>
+</nav>
+
+<section class="portada" id="inicio">
+    <h2>¡Bienvenido a GAME ZONE!</h2>
+    <p>Encontrá tus videojuegos y accesorios favoritos.</p>
+    <input type="text" id="buscador"
+    placeholder="Buscar productos..." oninput="buscar()">
+</section>
+
+<h2 style="text-align:center" id="tienda">
+    Nuestros productos
+</h2>
+
+<div style="text-align:center">
+    <select id="categoria" onchange="buscar()">
+        <option value="todos">Todas las categorías</option>
+        <option value="juegos">Videojuegos</option>
+        <option value="accesorios">Accesorios</option>
+    </select>
+</div>
+
+<div class="productos" id="productos">
+
+    <div class="producto" data-categoria="juegos">
+        <img src="https://placehold.co/300x200/222222/ffffff?text=GTA+V"
+        alt="Videojuego GTA V">
+        <h3>GTA V</h3>
+        <p>Videojuego de aventura</p>
+        <p class="precio">$25.000</p>
+        <button onclick="agregar('GTA V',25000)">
+        Agregar al carrito</button>
+    </div>
+
+    <div class="producto" data-categoria="juegos">
+        <img src="https://placehold.co/300x200/222222/ffffff?text=Minecraft"
+        alt="Videojuego Minecraft">
+        <h3>Minecraft</h3>
+        <p>Construcción y aventura</p>
+        <p class="precio">$18.000</p>
+        <button onclick="agregar('Minecraft',18000)">
+        Agregar al carrito</button>
+    </div>
+
+    <div class="producto" data-categoria="accesorios">
+        <img src="https://placehold.co/300x200/222222/ffffff?text=Auriculares"
+        alt="Auriculares gamer">
+        <h3>Auriculares Gamer</h3>
+        <p>Sonido para jugar</p>
+        <p class="precio">$32.000</p>
+        <button onclick="agregar('Auriculares Gamer',32000)">
+        Agregar al carrito</button>
+    </div>
+
+    <div class="producto" data-categoria="accesorios">
+        <img src="https://placehold.co/300x200/222222/ffffff?text=Joystick"
+        alt="Control para videojuegos">
+        <h3>Joystick</h3>
+        <p>Control para jugar</p>
+        <p class="precio">$45.000</p>
+        <button onclick="agregar('Joystick',45000)">
+        Agregar al carrito</button>
+    </div>
+
+</div>
+
+<section id="carrito">
+    <h2>🛒 Mi carrito</h2>
+    <ul id="lista"></ul>
+    <h3 id="total">Total: $0</h3>
+    <button onclick="vaciar()">Vaciar carrito</button>
+    <p id="mensaje"></p>
+</section>
+
+<footer>
+    <p>GAME ZONE © 2026</p>
+    <p>Trabajo práctico de programación</p>
+</footer>
+
+<script>
+let carrito = [];
+
+function agregar(nombre, precio) {
+    carrito.push({
+        nombre: nombre,
+        precio: precio
+    });
+
+    mostrarCarrito();
+    document.getElementById("mensaje").textContent =
+    "¡Agregaste " + nombre + " al carrito!";
+}
+
+function mostrarCarrito() {
+    let lista = document.getElementById("lista");
+    let total = 0;
+
+    lista.innerHTML = "";
+
+    for (let i = 0; i < carrito.length; i++) {
+        let item = document.createElement("li");
+
+        item.textContent = carrito[i].nombre +
+        " - $" + carrito[i].precio;
+
+        let boton = document.createElement("button");
+        boton.textContent = "Eliminar";
+
+        boton.onclick = function() {
+            carrito.splice(i, 1);
+            mostrarCarrito();
+        };
+
+        item.appendChild(boton);
+        lista.appendChild(item);
+
+        total = total + carrito[i].precio;
+    }
+
+    document.getElementById("total").textContent =
+    "Total: $" + total;
+}
+
+function vaciar() {
+    carrito = [];
+    mostrarCarrito();
+
+    document.getElementById("mensaje").textContent =
+    "El carrito está vacío.";
+}
+
+function buscar() {
+    let texto = document.getElementById("buscador")
+    .value.toLowerCase();
+
+    let categoria = document.getElementById("categoria").value;
+
+    let productos = document.getElementsByClassName("producto");
+
+    for (let i = 0; i < productos.length; i++) {
+        let nombre = productos[i].textContent.toLowerCase();
+        let tipo = productos[i].getAttribute("data-categoria");
+
+        if (nombre.includes(texto) &&
+        (categoria == "todos" || categoria == tipo)) {
+            productos[i].style.display = "block";
+        } else {
+            productos[i].style.display = "none";
+        }
+    }
+}
+</script>
+
+</body>
+</html>
